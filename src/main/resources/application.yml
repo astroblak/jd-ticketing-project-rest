@@ -1,0 +1,29 @@
+server:
+  port: 9090
+spring:
+  application:
+    name: ticketing-project-rest
+  profiles:
+    active: default
+  datasource:
+    url: jdbc:postgresql://localhost:5432/javaappd
+    username: postgres
+    password: 123ali12312
+    driver-class-name: org.postgresql.Driver
+    data: classpath:data.sql
+  jpa:
+    properties:
+      hibarnate:
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: create
+    show-sql: false
+  sql:
+    init:
+      mode: always
+security:
+      jwt:
+        secret-key: javaapp
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
