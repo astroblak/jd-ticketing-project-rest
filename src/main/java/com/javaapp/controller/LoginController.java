@@ -1,5 +1,6 @@
 package com.javaapp.controller;
 
+import com.javaapp.annotation.DefaultExceptionMessage;
 import com.javaapp.dto.UserDTO;
 import com.javaapp.entity.ResponseWrapper;
 import com.javaapp.entity.User;
@@ -33,6 +34,7 @@ public class LoginController {
 	}
 
 	@PostMapping("/authenticate")
+	@DefaultExceptionMessage(defaultMessage = "Bad Credentials")
 	public ResponseEntity<ResponseWrapper>doLogin(@RequestBody AuthenticationRequest authenticationRequest) throws TicketingProjectException {
 
 		String password = authenticationRequest.getPassword();
