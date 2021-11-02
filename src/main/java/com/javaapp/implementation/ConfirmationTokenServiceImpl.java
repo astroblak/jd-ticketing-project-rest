@@ -7,7 +7,9 @@ import com.javaapp.service.ConfirmationTokenService;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
 
     private ConfirmationTokenRepository confirmationTokenRepository;
@@ -31,14 +33,18 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
 
     @Override
     public ConfirmationToken readByToken(String token) throws TicketingProjectException {
+
         ConfirmationToken confirmationToken = confirmationTokenRepository.findByToken(token).orElse(null);
-        if (confirmationToken==null){
-            throw new TicketingProjectException("This token does not exist");
+
+        if(confirmationToken==null){
+            throw new TicketingProjectException("This token does not exists");
         }
+
         if(!confirmationToken.isTokenValid(confirmationToken.getExpireDate())){
             throw new TicketingProjectException("This token has been expired");
         }
-        return null;
+
+        return confirmationToken;
     }
 
     @Override
@@ -46,5 +52,6 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
 
         confirmationToken.setIsDeleted(true);
         confirmationTokenRepository.save(confirmationToken);
+
     }
 }

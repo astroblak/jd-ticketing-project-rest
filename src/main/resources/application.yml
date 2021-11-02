@@ -1,3 +1,5 @@
+app:
+  local-url: http://localhost:${server.port}
 server:
   port: 9090
 spring:
@@ -16,7 +18,7 @@ spring:
       hibarnate:
       dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: false
 
   mail:
@@ -34,11 +36,11 @@ spring:
           connectiontimeout: 5000
           timeout: 5000
           writetimeout: 5000
-    username: cybertekschool.email@gmail.com
-    password: Cybertekschool@2020
+    username: adad
+    password: adad
   sql:
     init:
-#      mode: always
+      mode: always
 security:
       jwt:
         secret-key: javaapp
