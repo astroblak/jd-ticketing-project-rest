@@ -15,6 +15,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private SecurityFilter securityFilter;
@@ -27,7 +28,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String[] permittedUrls = {
             "/authenticate",
-            "/create-user",
             "/confirmation",
             "/api/p1/**",
             "/v3/api-docs/**",
@@ -48,7 +48,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(permittedUrls)
                 .permitAll()
                 .anyRequest()
-                .authenticated();
+                .authenticated()
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
     }

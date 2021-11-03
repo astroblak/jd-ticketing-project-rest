@@ -5,6 +5,8 @@ import com.javaapp.dto.UserDTO;
 import com.javaapp.entity.Project;
 import com.javaapp.entity.User;
 import com.javaapp.enums.Status;
+import com.javaapp.exception.TicketingProjectException;
+import com.javaapp.mapper.MapperUtil;
 import com.javaapp.mapper.ProjectMapper;
 import com.javaapp.mapper.UserMapper;
 import com.javaapp.repository.ProjectRepository;
@@ -21,16 +23,16 @@ import java.util.stream.Collectors;
 @Service
 public class ProjectServiceImpl implements ProjectService {
 
-    private ProjectMapper projectMapper;
+
     private ProjectRepository projectRepository;
-    private UserMapper userMapper;
+    private MapperUtil mapperUtil;
     private UserService userService;
     private TaskService taskService;
 
-    public ProjectServiceImpl(ProjectMapper projectMapper, ProjectRepository projectRepository, UserMapper userMapper, UserService userService, TaskService taskService) {
-        this.projectMapper = projectMapper;
+
+    public ProjectServiceImpl(ProjectRepository projectRepository, MapperUtil mapperUtil, UserService userService, TaskService taskService) {
         this.projectRepository = projectRepository;
-        this.userMapper = userMapper;
+        this.mapperUtil = mapperUtil;
         this.userService = userService;
         this.taskService = taskService;
     }
@@ -38,42 +40,57 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ProjectDTO getByProjectCode(String code) {
         Project project = projectRepository.findByProjectCode(code);
-        return projectMapper.convertToDto(project);
+        return mapperUtil.convert(project,new ProjectDTO());
     }
 
     @Override
     public List<ProjectDTO> listAllProjects() {
         List<Project> list = projectRepository.findAll(Sort.by("projectCode"));
-        return list.stream().map(obj -> projectMapper.convertToDto(obj)).collect(Collectors.toList());
+        return list.stream().map(obj -> mapperUtil.convert(obj,new ProjectDTO())).collect(Collectors.toList());
     }
 
     @Override
-    public Project save(ProjectDTO dto) {
-        dto.setProjectStatus(Status.OPEN);
-        Project obj = projectMapper.convertToEntity(dto);
-//        obj.setAssignedManager(userMapper.convertToEntity(dto.getAssignedManager()));
-        Project project = projectRepository.save(obj);
-        return project;
+    public ProjectDTO save(ProjectDTO dto) throws TicketingProjectException {
+        Project foundProject = projectRepository.findByProjectCode(dto.getProjectCode());
+        if(foundProject!=null){
+            throw new TicketingProjectException("Project with this code already exists");
+        }
+
+        Project obj = mapperUtil.convert(dto,new Project());
+
+        Project createdProject = projectRepository.save(obj);
+
+        return mapperUtil.convert(createdProject, new ProjectDTO());
     }
 
     @Override
-    public void update(ProjectDTO dto) {
+    public ProjectDTO update(ProjectDTO dto) throws TicketingProjectException {
         Project project = projectRepository.findByProjectCode(dto.getProjectCode());
-        Project convertedProject = projectMapper.convertToEntity(dto);
-        convertedProject.setId(project.getId());
-        convertedProject.setProjectStatus(project.getProjectStatus());
-        projectRepository.save(convertedProject);
+
+        if(project == null){
+            throw new TicketingProjectException("Project does not exist");
+        }
+
+        Project convertedProject = mapperUtil.convert(dto,new Project());
+        Project updatedProject = projectRepository.save(convertedProject);
+
+        return mapperUtil.convert(updatedProject, new ProjectDTO());
     }
 
     @Override
-    public void delete(String code) {
+    public void delete(String code) throws TicketingProjectException {
         Project project = projectRepository.findByProjectCode(code);
+
+        if(project == null){
+            throw new TicketingProjectException("Project does not exist");
+        }
+
         project.setIsDeleted(true);
 
         project.setProjectCode(project.getProjectCode() +  "-" + project.getId());
         projectRepository.save(project);
 
-        taskService.deleteByProject(projectMapper.convertToDto(project));
+        taskService.deleteByProject(mapperUtil.convert(project, new ProjectDTO()));
     }
 
     @Override
