@@ -83,7 +83,17 @@ public class ProjectController {
     public ResponseEntity<ResponseWrapper> completeProject(@PathVariable("projectcode") String projectcode) throws TicketingProjectException {
 
         ProjectDTO projectDTO = projectService.complete(projectcode);
-        return ResponseEntity.ok(new ResponseWrapper("Project is deleted" , projectDTO));
+        return ResponseEntity.ok(new ResponseWrapper("Project is completed" , projectDTO));
+    }
+
+    @GetMapping("/details")
+    @Operation(summary = "Read all details")
+    @DefaultExceptionMessage(defaultMessage = "Something went wrong, try again!")
+    @PreAuthorize("hasAuthority('Manager')")
+    public ResponseEntity<ResponseWrapper> completeProject() throws TicketingProjectException {
+
+        List<ProjectDTO> projectDTOs = projectService.listAllProjectDetails();
+        return ResponseEntity.ok(new ResponseWrapper("Project is completed" , projectDTOs));
     }
 }
 
