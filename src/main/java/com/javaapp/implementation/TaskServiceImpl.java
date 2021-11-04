@@ -8,8 +8,7 @@ import com.javaapp.entity.User;
 import com.javaapp.enums.Status;
 import com.javaapp.exception.TicketingProjectException;
 import com.javaapp.util.MapperUtil;
-import com.javaapp.mapper.ProjectMapper;
-import com.javaapp.mapper.TaskMapper;
+
 import com.javaapp.repository.TaskRepository;
 import com.javaapp.repository.UserRepository;
 import com.javaapp.service.TaskService;
