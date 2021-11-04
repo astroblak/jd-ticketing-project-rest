@@ -5,7 +5,7 @@ import com.javaapp.dto.TaskDTO;
 import com.javaapp.dto.UserDTO;
 import com.javaapp.entity.User;
 import com.javaapp.exception.TicketingProjectException;
-import com.javaapp.mapper.MapperUtil;
+import com.javaapp.util.MapperUtil;
 import com.javaapp.repository.UserRepository;
 import com.javaapp.service.ProjectService;
 import com.javaapp.service.TaskService;

@@ -2,8 +2,7 @@ package com.javaapp.implementation;
 
 import com.javaapp.dto.UserDTO;
 import com.javaapp.entity.User;
-import com.javaapp.entity.common.UserPrincipal;
-import com.javaapp.mapper.MapperUtil;
+import com.javaapp.util.MapperUtil;
 import com.javaapp.service.SecurityService;
 import com.javaapp.service.UserService;
 import org.springframework.security.core.GrantedAuthority;

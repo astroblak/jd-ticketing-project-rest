@@ -1,12 +1,11 @@
 package com.javaapp.implementation;
 
 import com.javaapp.dto.ProjectDTO;
-import com.javaapp.dto.UserDTO;
 import com.javaapp.entity.Project;
 import com.javaapp.entity.User;
 import com.javaapp.enums.Status;
 import com.javaapp.exception.TicketingProjectException;
-import com.javaapp.mapper.MapperUtil;
+import com.javaapp.util.MapperUtil;
 import com.javaapp.mapper.ProjectMapper;
 import com.javaapp.mapper.UserMapper;
 import com.javaapp.repository.ProjectRepository;

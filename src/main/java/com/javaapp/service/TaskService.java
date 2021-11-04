@@ -13,9 +13,12 @@ public interface TaskService {
 
     TaskDTO findById(Long id) throws TicketingProjectException;
     List<TaskDTO> listAllTasks();
-    Task save(TaskDTO dto);
-    void update(TaskDTO dto);
-    void delete(long id);
+
+    TaskDTO save(TaskDTO dto);
+
+    TaskDTO update(TaskDTO dto) throws TicketingProjectException;
+
+    void delete(long id) throws TicketingProjectException;
 
     int totalNonCompletedTasks(String projectCode);
     int totalCompletedTasks(String projectCode);
@@ -24,13 +27,13 @@ public interface TaskService {
 
     List<TaskDTO> listAllByProject(ProjectDTO project);
 
-    List<TaskDTO> listAllTasksByStatusIsNot(Status status);
+    List<TaskDTO> listAllTasksByStatusIsNot(Status status) throws TicketingProjectException;
 
     List<TaskDTO> listAllTasksByProjectManager() throws TicketingProjectException;
 
-    void updateStatus(TaskDTO dto);
+    TaskDTO updateStatus(TaskDTO dto) throws TicketingProjectException;
 
-    List<TaskDTO> listAllTasksByStatus(Status status);
+    //List<TaskDTO> listAllTasksByStatus(Status status);
 
     List<TaskDTO> readAllByEmployee(User assignedEmployee);
 }

@@ -9,6 +9,7 @@ import com.javaapp.service.ProjectService;
 import com.javaapp.service.TaskService;
 import com.javaapp.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/task")
+@Tag(name = "task Controller",description = "task API")
+
 public class TaskController {
 
     private TaskService taskService;
