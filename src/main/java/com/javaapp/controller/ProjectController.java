@@ -53,8 +53,8 @@ public class ProjectController {
     @DefaultExceptionMessage(defaultMessage = "Something went wrong, try again!")
     @PreAuthorize("hasAnyAuthority('Admin','Manager')")
     public ResponseEntity<ResponseWrapper> create(@RequestBody ProjectDTO projectDTO) throws TicketingProjectException {
-        ProjectDTO createdPorject  = projectService.save(projectDTO);
-        return ResponseEntity.ok(new ResponseWrapper("Project is retrieved",projectDTO));
+        ProjectDTO createdProject  = projectService.save(projectDTO);
+        return ResponseEntity.ok(new ResponseWrapper("Project is created",createdProject));
     }
 
     @PutMapping
@@ -90,7 +90,7 @@ public class ProjectController {
     @Operation(summary = "Read all details")
     @DefaultExceptionMessage(defaultMessage = "Something went wrong, try again!")
     @PreAuthorize("hasAuthority('Manager')")
-    public ResponseEntity<ResponseWrapper> completeProject() throws TicketingProjectException {
+    public ResponseEntity<ResponseWrapper> readAllProjectDetails() throws TicketingProjectException {
 
         List<ProjectDTO> projectDTOs = projectService.listAllProjectDetails();
         return ResponseEntity.ok(new ResponseWrapper("Project is completed" , projectDTOs));

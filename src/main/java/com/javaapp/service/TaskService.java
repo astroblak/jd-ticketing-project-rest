@@ -5,12 +5,13 @@ import com.javaapp.dto.TaskDTO;
 import com.javaapp.entity.Task;
 import com.javaapp.entity.User;
 import com.javaapp.enums.Status;
+import com.javaapp.exception.TicketingProjectException;
 
 import java.util.List;
 
 public interface TaskService {
 
-    TaskDTO findById(Long id);
+    TaskDTO findById(Long id) throws TicketingProjectException;
     List<TaskDTO> listAllTasks();
     Task save(TaskDTO dto);
     void update(TaskDTO dto);
@@ -25,7 +26,7 @@ public interface TaskService {
 
     List<TaskDTO> listAllTasksByStatusIsNot(Status status);
 
-    List<TaskDTO> listAllTasksByProjectManager();
+    List<TaskDTO> listAllTasksByProjectManager() throws TicketingProjectException;
 
     void updateStatus(TaskDTO dto);
 

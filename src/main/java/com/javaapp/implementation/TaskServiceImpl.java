@@ -5,6 +5,8 @@ import com.javaapp.dto.TaskDTO;
 import com.javaapp.entity.Task;
 import com.javaapp.entity.User;
 import com.javaapp.enums.Status;
+import com.javaapp.exception.TicketingProjectException;
+import com.javaapp.mapper.MapperUtil;
 import com.javaapp.mapper.ProjectMapper;
 import com.javaapp.mapper.TaskMapper;
 import com.javaapp.repository.TaskRepository;
@@ -21,34 +23,28 @@ import java.util.stream.Collectors;
 @Service
 public class TaskServiceImpl implements TaskService {
 
-    TaskRepository taskRepository;
-    TaskMapper taskMapper;
-    ProjectMapper projectMapper;
-    UserRepository userRepository;
+    private TaskRepository taskRepository;
+    private MapperUtil mapperUtil;
+    private UserRepository userRepository;
 
-    public TaskServiceImpl(TaskRepository taskRepository, TaskMapper taskMapper, ProjectMapper projectMapper, UserRepository userRepository) {
+    public TaskServiceImpl(TaskRepository taskRepository, MapperUtil mapperUtil, UserRepository userRepository) {
         this.taskRepository = taskRepository;
-        this.taskMapper = taskMapper;
-        this.projectMapper = projectMapper;
+        this.mapperUtil = mapperUtil;
         this.userRepository = userRepository;
     }
 
     @Override
-    public TaskDTO findById(Long id) {
-        Optional<Task> task = taskRepository.findById(id);
-        if(task.isPresent()){
-            return taskMapper.convertToDto(task.get());
-        }
-        return null;
+    public TaskDTO findById(Long id) throws TicketingProjectException {
+        Task task = taskRepository.findById(id).orElseThrow(() -> new TicketingProjectException("Task does not exist"));
+
+        return mapperUtil.convert(task, new TaskDTO());
     }
 
     @Override
     public List<TaskDTO> listAllTasks() {
         List<Task> list = taskRepository.findAll();
 
-        return list.stream().map(taskMapper::convertToDto).collect(Collectors.toList());
-
-        //return list.stream().map(obj ->{return taskMapper.convertToDto(obj);}).collect(Collectors.toList());
+        return list.stream().map(obj -> mapperUtil.convert(obj, new TaskDTO())).collect(Collectors.toList());
 
     }
 
@@ -119,11 +115,16 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<TaskDTO> listAllTasksByProjectManager() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByUserName(username);
+    public List<TaskDTO> listAllTasksByProjectManager() throws TicketingProjectException {
+        String id = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findById(Long.parseLong(id)).orElseThrow(() -> new TicketingProjectException("This user does not exist"));
+        // since above returns optional, it has to be handled with orElseThrow
+
+
         List<Task> tasks = taskRepository.findAllByProjectAssignedManager(user);
-        return tasks.stream().map(taskMapper::convertToDto).collect(Collectors.toList());
+
+        return tasks.stream().map(obj -> mapperUtil.convert(obj, new TaskDTO())).collect(Collectors.toList());
     }
 
     @Override
