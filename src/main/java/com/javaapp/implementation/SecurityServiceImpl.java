@@ -5,12 +5,14 @@ import com.javaapp.entity.User;
 import com.javaapp.util.MapperUtil;
 import com.javaapp.service.SecurityService;
 import com.javaapp.service.UserService;
+import lombok.SneakyThrows;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -27,6 +29,7 @@ public class SecurityServiceImpl implements SecurityService {
         this.mapperUtil = mapperUtil;
     }
 
+    @SneakyThrows
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
 
@@ -40,7 +43,7 @@ public class SecurityServiceImpl implements SecurityService {
     }
 
     @Override
-    public User loadUser(String param) {
+    public User loadUser(String param) throws AccessDeniedException {
         UserDTO user = userService.findByUserName(param);
         return mapperUtil.convert(user,new User());
     }
